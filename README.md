@@ -13,4 +13,9 @@ errores.forEach(function (val) {
 });
 ```
 
+``
+Número de errores: 2
+Error num:4 - El día de la fecha de nacimiento no se corresponde con el cip indicado.
+Error num:5 - El mes de la fecha de nacimiento no se corresponde con el cip indicado.
+``
 
