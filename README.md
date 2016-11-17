@@ -1,5 +1,5 @@
 # jscip
-Validador de C&oacutedigo de Identificador de Paciente del Servicio de Salud de Castilla-La Mancha SESCAM
+Validador de C&oacute;digo de Identificador de Paciente del Servicio de Salud de Castilla-La Mancha SESCAM
 
 #uso
 ```javascript
