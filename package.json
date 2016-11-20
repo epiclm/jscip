@@ -1,6 +1,6 @@
 {
   "name": "jscip",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Validador de Código de Identificador de Paciente del Servicio de Salud de Castilla-La Mancha SESCAM",
   "main": "CIP.js",
   "scripts": {
