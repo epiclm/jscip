@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //
-// DENO : Objeto CIP para el la validación del código de identificación de
-//        paciente del SErvicio de Salud CAstilla-la Mancha,
+// DENO : Objeto CIP para el la validaciÃ³n del cÃ³digo de identificaciÃ³n de
+//        paciente del SErvicio de Salud Castilla-la Mancha,
 //
 // LICENCIA : MIT
 //
@@ -29,7 +29,7 @@ var CIP = function (cip, apellido1, apellido2, fecha, sexo) {
     var perror = -1;
     var pnumErrores = -1;
     
-    //atributo público
+    //atributo pÃºblico
     this.error = -1;
     this.numErrores = -1;
 
@@ -100,14 +100,14 @@ var CIP = function (cip, apellido1, apellido2, fecha, sexo) {
         ///////////////////
        
         b0000000 0  sin error.
-        b11111111 255  el cip no es válido.
-        b00000010  2  el apellido1 no es válido.
+        b11111111 255  el cip no es vÃ¡lido.
+        b00000010  2  el apellido1 no es vÃ¡lido.
         b00000100  4  el apellido2 no es valido.
-        b00001000  8  el sexo no es válido.
+        b00001000  8  el sexo no es vÃ¡lido.
         b00010000  16 el dia de nacimiento es erroneo.
         b00100000  32 el mes de nacimiento es erroneo.
-        b01000000  64 el año de nacimiento es erroneo.
-        b10000000 128 el cip no valida el dígito de control.
+        b01000000  64 el aÃ±o de nacimiento es erroneo.
+        b10000000 128 el cip no valida el dÃ­gito de control.
     */
         pnumErrores = 0;
         perror = 0;
@@ -173,11 +173,11 @@ CIP.prototype.getErrores = function () {
         cip: { numError: 1, deno: "El cip no es correcto." },
         apellido1:  { numError: 2, deno: "El primer apellido no es correcto para el cip indicado." },
         apellido2:  { numError: 3, deno: "El segundo apellido no es correcto para el cip indicado." },
-        fechaDia:   { numError: 4, deno: "El día de la fecha de nacimiento no se corresponde con el cip indicado." },
+        fechaDia:   { numError: 4, deno: "El dÃ­a de la fecha de nacimiento no se corresponde con el cip indicado." },
         fechaMes:   { numError: 5, deno: "El mes de la fecha de nacimiento no se corresponde con el cip indicado." },
-        fechaAnio:  { numError: 6, deno: "El año de la fecha de nacimiento no se corresponde con el cip indicado." },
-        sexo:       { numError: 7, deno: "El sexo no es compatibe con los dígitos de fecha del cip." },
-        cip_valida: { numError: 8, deno: "El dígito de control no es correcto." }
+        fechaAnio:  { numError: 6, deno: "El aÃ±o de la fecha de nacimiento no se corresponde con el cip indicado." },
+        sexo:       { numError: 7, deno: "El sexo no es compatibe con los dÃ­gitos de fecha del cip." },
+        cip_valida: { numError: 8, deno: "El dÃ­gito de control no es correcto." }
     };
 
     //Vamos comprobado errores
@@ -185,11 +185,11 @@ CIP.prototype.getErrores = function () {
         ret.cip = _errores.cip;
         return ret;
     } else {
-        //devuelve una cadena con la representación binaria
-        //del número error (registro de errores)
+        //devuelve una cadena con la representaciÃ³n binaria
+        //del nÃºmero error (registro de errores)
         binerror = binario8char(this.error.toString(2));
-        //El último valor del array del string que representa
-        //el número binario es el menos siginificativo.
+        //El Ãºltimo valor del array del string que representa
+        //el nÃºmero binario es el menos siginificativo.
         if (binerror.charAt(7) == 1)
             ret.push(_errores.cip);
         if (binerror.charAt(6) == 1)
@@ -212,4 +212,5 @@ CIP.prototype.getErrores = function () {
 
 
 //Exportamos el objeto CIP al paquete npm
-module.exports.CIP = CIP;
+if( typeof module !== 'undefined' )
+	module.exports.CIP = CIP;
