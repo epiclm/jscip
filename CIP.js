@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 //
-// DENO : Objeto CIP para el la validación del código de identificación de
+// DENO : Objeto CIP para el la validaciÃ³n del cÃ³digo de identificaciÃ³n de
 //        paciente del SErvicio de Salud Castilla-la Mancha,
 //
 // LICENCIA : MIT
@@ -15,40 +15,31 @@
 ///////////////////////////////////////////////////////////////////////////
 
 
-var CIP = function (cip, apellido1, apellido2, fecha, sexo) {
-    
-    var regCip15Control = /([A-Z]{2})([A-Z]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{3})([0-9]{2})([0-9]{0,1}$)/;
-    
-    //atributos privados
-    var pcip = "";
-    var papellido1 = "";
-    var papellido2 = "";
-    var nombre = "";
-    var psexo = "";
-    var pfecha = "";
-    var perror = -1;
-    var pnumErrores = -1;
-    
-    //atributo público
-    this.error = -1;
-    this.numErrores = -1;
+var CIP = function(cip, apellido1, apellido2, fecha, sexo) {
 
-    
-    if (typeof cip !== "undefined")
-        pcip = cip;
-    if (typeof apellido1 !== "undefined")
-        papellido1 = apellido1;
-    if (typeof apellido2 !== "undefined")
-        papellido2 = apellido2;
-    if (typeof sexo !== "undefined")
-        psexo = sexo;
-    if (typeof fecha !== "undefined")
-        if (fecha instanceof Date)
-            pfecha = fecha;
-        else
-            pfecha = new Date(fecha);
-    
-    
+    var regCip15Control = /([A-Z]{2})([A-Z]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{3})([0-9]{2})([0-9]{0,1}$)/;
+
+    if (cip instanceof Object) {
+        _cip = cip.cip;
+        _apellido1 = cip.apellido1;
+        _apellido2 = cip.apellido2;
+        _fecha = cip.fecha;
+        _sexo = cip.sexo;
+    } else {
+        _cip = cip;
+        _apellido1 = apellido1;
+        _apellido2 = apellido2;
+        _fecha = fecha;
+        _sexo = sexo;
+    }
+
+    var __apellido1 = "";
+    var __apellido2 = "";
+    var __nombre = "";
+    var __sexo = "";
+    var __fecha = "";
+    var __error = -1;
+    var __numErrores = -1;
     var __apellido1_LL = null;
     var __apellido2_LL = null;
     var __anio_LL = null;
@@ -57,16 +48,51 @@ var CIP = function (cip, apellido1, apellido2, fecha, sexo) {
     var __prodencia_NNN = null;
     var __repeticion_NN = null;
     var __control_N = null;
-    
-    
-    function okcip() {
-        return regCip15Control.test(pcip);
+
+    //inicializacion de las variables
+    if (typeof _cip !== "undefined")
+        __cip = _cip;
+    if (typeof _apellido1 !== "undefined")
+        __apellido1 = _apellido1;
+    if (typeof _apellido2 !== "undefined")
+        __apellido2 = _apellido2;
+    if (typeof _sexo !== "undefined")
+        __sexo = _sexo;
+    else
+        __sexo = 9;
+    if (typeof _fecha !== "undefined") {
+        if (_fecha instanceof Date) {
+            __fecha = _fecha;
+        } else if (_fecha != null && _fecha !== "") {
+            var timestamp = Date.parse(_fecha)
+            if (isNaN(timestamp) == false) {
+                __fecha = new Date(timestamp);
+            } else {
+                __fecha = null;
+            }
+        } else {
+            __fecha = null;
+        }
     }
-    
-    
+
+    //atributos públicos
+    this.cip = __cip;
+    this.apellido1 = __apellido1;
+    this.apellido2 = __apellido2;
+    this.fechaNacimiento = __fecha;
+    this.sexo = __sexo;
+    this.error = -1;
+    this.numErrores = -1;
+
+
+    function okcip() {
+        return regCip15Control.test(__cip);
+    }
+
+
     function dosPrimerasLetrasCadena(cadena) {
         var regExpVocales = /[AEIOU]/g
-        cadena = cadena.toUpperCase().replace("�", "X");
+        cadena = cadena.toUpperCase().replace("Ñ", "X");
         var consonantes = cadena.toUpperCase().replace(regExpVocales, "");
         if (consonantes.length > 1)
             return consonantes[0] + consonantes[1];
@@ -76,10 +102,11 @@ var CIP = function (cip, apellido1, apellido2, fecha, sexo) {
             return "XX";
         }
     }
-    
+
+
     function descompone() {
         if (okcip()) {
-            gr = regCip15Control.exec(pcip);
+            gr = regCip15Control.exec(__cip);
             if (gr != null) {
                 __apellido1_LL = gr[1];
                 __apellido2_LL = gr[2];
@@ -92,57 +119,68 @@ var CIP = function (cip, apellido1, apellido2, fecha, sexo) {
             }
         }
     }
-    
+
+
     function analiza(self) {
-    /*
-        ///////////////////
-        //ERRORES
-        ///////////////////
-       
-        b0000000 0  sin error.
-        b11111111 255  el cip no es válido.
-        b00000010  2  el apellido1 no es válido.
-        b00000100  4  el apellido2 no es valido.
-        b00001000  8  el sexo no es válido.
-        b00010000  16 el dia de nacimiento es erroneo.
-        b00100000  32 el mes de nacimiento es erroneo.
-        b01000000  64 el año de nacimiento es erroneo.
-        b10000000 128 el cip no valida el dígito de control.
-    */
+        /*
+            ///////////////////
+            //ERRORES
+            ///////////////////
+           
+            b0000000 0  sin error.
+            b11111111 255  el cip no es válido.
+            b00000010  2  el apellido1 no es válido.
+            b00000100  4  el apellido2 no es valido.
+            b00001000  8  el sexo no es válido para el cip dado.
+            b00010000  16 el dia de nacimiento es erroneo.
+            b00100000  32 el mes de nacimiento es erroneo.
+            b01000000  64 el año de nacimiento es erroneo.
+            b10000000 128 el cip no valida el dígito de control.
+        */
         pnumErrores = 0;
         perror = 0;
         if (okcip()) {
-            if (__apellido1_LL !== dosPrimerasLetrasCadena(papellido1)) {
+            if (__apellido1_LL !== dosPrimerasLetrasCadena(__apellido1)) {
                 perror = perror | 2;
-                pnumErrores++;
             }
-            if (__apellido2_LL !== dosPrimerasLetrasCadena(papellido2)) {
+            if (__apellido2_LL !== dosPrimerasLetrasCadena(__apellido2)) {
                 perror = perror | 4;
-                pnumErrores++;
             }
-            if (__dia_NN === pfecha.getDate() && psexo == 6) {
+            if (!(__sexo == 6 || __sexo == 1)) {
                 perror = perror | 8;
-                pnumErrores++;
             }
-            if (__dia_NN !== pfecha.getDate() && psexo == 1) {
-                perror = perror | 16;
-                pnumErrores++;
-            }
-            if (__dia_NN === pfecha.getDate() + 40 && psexo == 6) {
+            if (__fecha != null) {
+                if (!(__dia_NN === __fecha.getDate() || __dia_NN === __fecha.getDate() + 40)) {
+                    perror = perror | 16
+                }
+                if (__dia_NN === __fecha.getDate() && __sexo === 6) {
+                    perror = perror | 8;
+                }
+                if (__dia_NN === __fecha.getDate() + 40 && __sexo == 1) {
+                    perror = perror | 8;
+                }
+                if (__dia_NN > 40 && __sexo == 1) {
+                    perror = perror | 8;
+                }
+                if (__dia_NN < 40 && __sexo == 6) {
+                    perror = perror | 8;
+                }
+                if (__mes_NN !== __fecha.getMonth() + 1) {
+                    perror = perror | 32;
+                }
+                if (__anio_LL !== __fecha.toISOString().substring(2, 4)) {
+                    perror = perror | 64;
+                }
+            } else {
                 perror = perror | 8;
-                pnumErrores++;
-            }
-            if (__dia_NN !== pfecha.getDate() + 40 && psexo == 6) {
                 perror = perror | 16;
-                pnumErrores++;
-            }
-            if (__mes_NN !== pfecha.getMonth() + 1) {
                 perror = perror | 32;
-                pnumErrores++;
-            }
-            if (__anio_LL !== pfecha.toISOString().substring(2, 4)) {
                 perror = perror | 64;
-                pnumErrores++;
+            }
+            var errorBin = perror.toString(2)
+            for (i = 0; i < errorBin.length; i++) {
+                if (errorBin[i] === '1')
+                    pnumErrores++;
             }
         } else {
             perror = 255;
@@ -151,14 +189,16 @@ var CIP = function (cip, apellido1, apellido2, fecha, sexo) {
         self.error = perror;
         self.numErrores = pnumErrores;
     }
-    
+
     descompone();
     analiza(this);
 
+
 };
 
-CIP.prototype.getErrores = function () {
-    
+
+CIP.prototype.getErrores = function() {
+
     //Completa la cadena binaria a 8bits
     function binario8char(cadena) {
         if (cadena.length >= 8) {
@@ -171,12 +211,12 @@ CIP.prototype.getErrores = function () {
     var ret = [];
     var _errores = {
         cip: { numError: 1, deno: "El cip no es correcto." },
-        apellido1:  { numError: 2, deno: "El primer apellido no es correcto para el cip indicado." },
-        apellido2:  { numError: 3, deno: "El segundo apellido no es correcto para el cip indicado." },
-        fechaDia:   { numError: 4, deno: "El día de la fecha de nacimiento no se corresponde con el cip indicado." },
-        fechaMes:   { numError: 5, deno: "El mes de la fecha de nacimiento no se corresponde con el cip indicado." },
-        fechaAnio:  { numError: 6, deno: "El año de la fecha de nacimiento no se corresponde con el cip indicado." },
-        sexo:       { numError: 7, deno: "El sexo no es compatibe con los dígitos de fecha del cip." },
+        apellido1: { numError: 2, deno: "El primer apellido no es correcto para el cip indicado." },
+        apellido2: { numError: 3, deno: "El segundo apellido no es correcto para el cip indicado." },
+        fechaDia: { numError: 4, deno: "El día de la fecha de nacimiento no se corresponde con el cip indicado." },
+        fechaMes: { numError: 5, deno: "El mes de la fecha de nacimiento no se corresponde con el cip indicado." },
+        fechaAnio: { numError: 6, deno: "El año de la fecha de nacimiento no se corresponde con el cip indicado." },
+        sexo: { numError: 7, deno: "El sexo no es compatibe con los dígitos de fecha del cip." },
         cip_valida: { numError: 8, deno: "El dígito de control no es correcto." }
     };
 
@@ -212,5 +252,10 @@ CIP.prototype.getErrores = function () {
 
 
 //Exportamos el objeto CIP al paquete npm
-if( typeof module !== 'undefined' )
-	module.exports.CIP = CIP;
+if (typeof module !== 'undefined')
+    module.exports.CIP = CIP;
+
+
+//Exportamos el objeto CIP al paquete npm
+if (typeof module !== 'undefined')
+    module.exports.CIP = CIP;
