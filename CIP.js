@@ -7,7 +7,7 @@
 //
 // AUTOR : Ricardo Ortega Galiana (ricortegal@gmail.com)
 //
-// version 1.0.0
+// version 1.0.3
 //
 // https://github.com/ricortegal/jscip 
 // git clone https://github.com/ricortegal/jscip.git
@@ -249,11 +249,6 @@ CIP.prototype.getErrores = function() {
     }
     return ret;
 }
-
-
-//Exportamos el objeto CIP al paquete npm
-if (typeof module !== 'undefined')
-    module.exports.CIP = CIP;
 
 
 //Exportamos el objeto CIP al paquete npm
