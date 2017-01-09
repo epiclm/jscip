@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //
-// DENO : Objeto CIP para el la validaciÃ³n del cÃ³digo de identificaciÃ³n de
-//        paciente del SErvicio de Salud Castilla-la Mancha,
+// DENO : Objeto CIP para el la validación del código de identificación de
+//        paciente del Servicio de Salud Castilla-la Mancha,
 //
 // LICENCIA : MIT
 //
