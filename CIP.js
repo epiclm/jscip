@@ -7,7 +7,7 @@
 //
 // AUTOR : Ricardo Ortega Galiana (ricortegal@gmail.com)
 //
-// version 1.0.3
+// version 1.0.4
 //
 // https://github.com/ricortegal/jscip 
 // git clone https://github.com/ricortegal/jscip.git
