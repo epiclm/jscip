@@ -7,13 +7,14 @@
 //
 // AUTOR : Ricardo Ortega Galiana (ricortegal@gmail.com)
 //
-// version 1.0.4
+// version 1.0.5
 //
 // https://github.com/ricortegal/jscip 
 // git clone https://github.com/ricortegal/jscip.git
 //
 ///////////////////////////////////////////////////////////////////////////
 
+'use strict'
 
 var CIP = function(cip, apellido1, apellido2, fecha, sexo) {
 
@@ -195,6 +196,7 @@ var CIP = function(cip, apellido1, apellido2, fecha, sexo) {
 
 
 };
+
 
 
 CIP.prototype.getErrores = function() {
