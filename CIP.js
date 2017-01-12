@@ -17,6 +17,7 @@
 'use strict'
 
 var CIP = function(cip, apellido1, apellido2, fecha, sexo) {
+    var _cip, _apellido1, _apellido2, _fecha, _sexo;
 
     var regCip15Control = /([A-Z]{2})([A-Z]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{3})([0-9]{2})([0-9]{0,1}$)/;
 
@@ -34,6 +35,7 @@ var CIP = function(cip, apellido1, apellido2, fecha, sexo) {
         _sexo = sexo;
     }
 
+    var __cip;
     var __apellido1 = "";
     var __apellido2 = "";
     var __nombre = "";
@@ -49,6 +51,8 @@ var CIP = function(cip, apellido1, apellido2, fecha, sexo) {
     var __prodencia_NNN = null;
     var __repeticion_NN = null;
     var __control_N = null;
+    var pnumErrores;
+    var perror;
 
     //inicializacion de las variables
     if (typeof _cip !== "undefined")
@@ -106,6 +110,7 @@ var CIP = function(cip, apellido1, apellido2, fecha, sexo) {
 
 
     function descompone() {
+        var gr;
         if (okcip()) {
             gr = regCip15Control.exec(__cip);
             if (gr != null) {
@@ -179,7 +184,7 @@ var CIP = function(cip, apellido1, apellido2, fecha, sexo) {
                 perror = perror | 64;
             }
             var errorBin = perror.toString(2)
-            for (i = 0; i < errorBin.length; i++) {
+            for (var i = 0; i < errorBin.length; i++) {
                 if (errorBin[i] === '1')
                     pnumErrores++;
             }
